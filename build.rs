@@ -67,16 +67,16 @@ fn prebuild() -> io::Result<()> {
     let build_dir = Path::new(env!("OUT_DIR"));
 
     // Ensure the presence of liblua.a
-    if !fs::metadata(concat!(env!("OUT_DIR"), "/lua-5.3.0/src/liblua.a")).is_ok() {
+    if !fs::metadata(concat!(env!("OUT_DIR"), "/lua-5.2.4/src/liblua.a")).is_ok() {
         try!(fs::create_dir_all(build_dir));
 
         // Download lua if it hasn't been already
-        if !fs::metadata(concat!(env!("OUT_DIR"), "/lua-5.3.0.tar.gz")).is_ok() {
-            try!(fetch_in_dir("http://www.lua.org/ftp/lua-5.3.0.tar.gz", Some(build_dir)));
-            try!(run_command(&["tar", "xzf", "lua-5.3.0.tar.gz"], Some(build_dir)));
+        if !fs::metadata(concat!(env!("OUT_DIR"), "/lua-5.2.4.tar.gz")).is_ok() {
+            try!(fetch_in_dir("http://www.lua.org/ftp/lua-5.2.4.tar.gz", Some(build_dir)));
+            try!(run_command(&["tar", "xzf", "lua-5.2.4.tar.gz"], Some(build_dir)));
         }
         // Compile lua
-        try!(build_lua(Path::new(concat!(env!("OUT_DIR"), "/lua-5.3.0"))));
+        try!(build_lua(Path::new(concat!(env!("OUT_DIR"), "/lua-5.2.4"))));
     }
 
     // Ensure the presence of glue.rs
@@ -84,7 +84,7 @@ fn prebuild() -> io::Result<()> {
         // Compile glue.c
         let glue = concat!(env!("OUT_DIR"), "/glue");
         try!(run_command(&["gcc",
-                         "-I", concat!(env!("OUT_DIR"), "/lua-5.3.0/src"),
+                         "-I", concat!(env!("OUT_DIR"), "/lua-5.2.4/src"),
                          "src/glue/glue.c",
                          "-o", &glue], None));
         // Run glue to generate glue.rs
@@ -93,7 +93,7 @@ fn prebuild() -> io::Result<()> {
 
     // Output build information
     println!("cargo:rustc-link-lib=static=lua");
-    println!(concat!("cargo:rustc-link-search=native=", env!("OUT_DIR"), "/lua-5.3.0/src"));
+    println!(concat!("cargo:rustc-link-search=native=", env!("OUT_DIR"), "/lua-5.2.4/src"));
 
     Ok(())
 }

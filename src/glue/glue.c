@@ -28,7 +28,7 @@
 #include <lua.h>
 #include <lauxlib.h>
 #include <lualib.h>
-
+#include "hack.h"
 // Macros taken from https://gcc.gnu.org/onlinedocs/cpp/Stringification.html
 #define xstr(s) str(s)
 #define str(s) #s
@@ -56,6 +56,8 @@ typedef struct rs_item {
 #define RS_TYPE(name, val)   {TY_TYPE,    name, .str_val=val}
 #define RS_COMMENT(val)      {TY_COMMENT, NULL, .str_val=val}
 #define RS_RAW(val)          {TY_RAW,     NULL, .str_val=val}
+
+
 
 const char* rs_int_type(int width) {
   switch (width) {
